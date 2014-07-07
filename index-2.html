@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Sprint 2</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+     <link href="css/main.css" rel="stylesheet">
+     <script src='https://cdn.firebase.com/js/client/1.0.17/firebase.js'></script>
+
+        <div class="container_12">
+            <div class="header">
+            <nav id="bt-menu" class="bt-menu">
+                <ul class="nav nav-pills pull-right">
+    
+              <li class="current bt-icon "><a href="index.html">Home</a></li>
+             <li class="bt-icon"><a href="index-2.html">Menu</a></li>
+             <li class="bt-icon"><a href="index-3.html">Order</a></li>
+             <li class="bt-icon"><a href="index-4.html">Contacts</a></li>
+            </ul>
+            </nav>
+                <h3 class="text-muted">Sprint 2</h3>
+            </div>
+	
+	<div class="row">
+		<div class="col-lg-12 col-xs-12 col-center">
+		</div>
+	</div>
+            <div class="jumbotron" style="background: red;">
+          <h1> Menu </h1>
+			</div>
+         <div class="container">
+	<div class="row">
+		<div class="col-lg-12 col-xs-12 col-center">
+		</div>
+	</div>
+
+	<form>
+
+		<div class="col-lg-12 col-xs-12 col-center">
+		<left>Customer Name: <input class="customerName" type="text" placeholder="Name" /></left>
+		<br/>
+	</div>
+	
+	</div>
+        
+        </div>
+    </head>
+	<body>
+		<div class="restPizza">
+			<ul>
+           		<li> <input type="checkbox" name="checkboxlist"/>   Pepperoni Pizza</li>
+           		<li> <input type="checkbox" name="checkboxlist"/>   Hawaiian Pizza</li>
+           		<li> <input type="checkbox" name="checkboxlist"/>   Combination Pizza</li> 
+      		</ul>
+        </div>
+
+          <div id="restBurger">
+          	<ul>
+            	<li> <input type="checkbox" name="checkboxlist"/>   Big Burger</li>
+           		<li> <input type="checkbox" name="checkboxlist"/>   Cheese Burger</li>
+           		<li> <input type="checkbox" name="checkboxlist"/>   Bacon Burger</li>
+           		</ul> 
+           </div>
+
+          <div id="restBurrito">
+          	<ul>
+            	<li> <input type="checkbox" name="checkboxlist"/>   Beef Burrito</li>
+           		<li> <input type="checkbox" name="checkboxlist"/>   Chicken Burrito</li>
+           		<li> <input type="checkbox" name="checkboxlist"/>   Pork Burrito</li>
+           	</ul> 
+           </div>
+
+           <div id="restSandwich">
+			<ul>
+             	<li> <input type="checkbox" name="checkboxlist"/>   Turkey Sandwich</li>
+           		<li> <input type="checkbox" name="checkboxlist"/>   Ham Sandwich</li>
+           		<li> <input type="checkbox" name="checkboxlist"/>   Salame Sandwich</li> 
+           	</ul>			
+            </div>
+        
+        <button id="target">Submit</button>
+        </div>
+        
+	</form>	
+		<div class="container orderContainer">
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-12 col-center">
+                <ul class="listOrders" id="orderUp">
+                    
+                </ul>
+            </div>
+        </div>
+    </div><!-- END OF ORDER CONTAINER -->
+
+
+		<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		
+<script>
+$(document).ready(function(){
+		// localStorage detection
+	function supportsLocalStorage() {
+	  return typeof(Storage)!== 'undefined';
+	}
+	// localStorage detection
+	function supportsLocalStorage() {
+	  return typeof(Storage)!== 'undefined';
+	}
+	//initialize firebase object
+		var myDataRef = new Firebase('https://brilliant-fire-9490.firebaseio.com/');
+		function setItems(key, data){
+				//set items in local storage
+				localStorage.setItem(key,data);
+				//set items in Firebase server
+				myDataRef.push({key: data});
+		}
+		
+
+		//Formatting DATE and TIME
+		var newDate = new Date();
+		var am_pm = " "; 
+		var currDate = newDate.getDate();
+		var currMonth = newDate.getMonth() + 1;
+		var currYear = newDate.getFullYear();
+		var currHour = newDate.getHours();
+		if (currHour < 12) {
+			am_pm = "AM";
+		}
+		else {
+			am_pm = "PM";
+		}
+		if (currHour == 0) {
+			currHour = currHour - 12;
+		}
+		var currMin = newDate.getMinutes();
+		currMin = currMin + " ";
+		if (currMin.length == 1) {
+			currMin = "0" + currMin;
+		}
+
+		//set Date
+		var orderTimestamp = "Order Date: " +currMonth + "/" + currDate + "/" + currYear + " " + currHour + ":" + currMin + am_pm;
+		setItems('date', orderTimestamp);
+
+		//set Customer Name
+		var customerName = "Customer Name: " + $('.customerName').val();
+		setItems('customerName', customerName);
+		
+		//empty the order history div
+		$('.orderContainer').find('.listOrders').empty();
+
+		//get items from Firebase to pass into displayListItems()
+		myDataRef.on('child_added', function(snapshot){
+			var item = snapshot.val();
+			displayListItems(item.key);
+		});
+
+		 //initialize firebase object
+        var myDataRef = new Firebase('https://brilliant-fire-9490.firebaseio.com/');
+        //if using Firebase data, append data to page
+        function displayListItems(data){
+            //Print out order in a list
+            $('.orderContainer').find('.listOrders').append('<li>' + data + ' </li>');
+
+            //Print out order in one line
+            // $('.orderContainer').find('.listOrders').append('<span>' + data + ' </span>');
+            }
+            //add a horizontal line to end of each order
+            $("li:contains('Total')").append('<hr />');
+
+            //scroll down to bottom of page to view order
+            $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+
+
+    });
+
+</script>
+
+</body>
+<footer>
+		 <div class="footer">
+                <p> From Raul</p>
+            </div>
+
+	</footer>
+
+</html>
+
